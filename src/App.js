@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import { useDispatch} from "react-redux";
+import { Home } from "./layout/Home";
+import { incrementAction, decrementAction, loginAction } from "./redux/actions";
+import { useUserStatus, useCurrentCount } from "./redux/hooks";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const dispatch = useDispatch();
+  const Counter = () => {
+    const increment = () => {
+      dispatch(incrementAction(3));
+    };
+    const decrement = () => {
+      dispatch(decrementAction(2));
+    };
+    const count = useCurrentCount();
+    return (
+      <>
+        <button onClick={increment}>+</button>
+        <button onClick={decrement}>-</button>
+        <hr />
+        count={count}
+      </>
+    );
+  };
+  const LoginContainer = () => {
+    const login = () => {
+      dispatch(loginAction());
+    };
+    return (
+      <div>
+        <button onClick={login}>Login</button>
+      </div>
+    );
+  };
+  const isLoggedIn = useUserStatus();
+  return <Home>{isLoggedIn ? <Counter /> : <LoginContainer />}</Home>;
 }
 
 export default App;
